@@ -6,10 +6,14 @@ var requestt = require('request');
 
 app.use(express.static('public'));
 
-app.get("/", function (request, response) {
-  
+app.get("/search/:term", function (request, response) {
+  /*store search term in history*/
+  if((!request.query.offset) || (request.query.offset > 50) || (request.query.offset < 1))
+    {
+      
+    }
   var options = {
-    url: 'https://api.imgur.com/3/gallery/search?q=test',
+    url: 'https://api.imgur.com/3/gallery/search?q='+request.params.term+'&offset='+request.query.offset,
     headers: {
        Authorization: 'Client-ID '+process.env.CLIENT_ID,
     }
@@ -18,7 +22,7 @@ app.get("/", function (request, response) {
   requestt(options,function(error, res, body) {
     if(error) {console.log(error);}
     if (!error) {
-      response.json(JSON.parse(body));
+      response.json(JSON.parse(body).data.slice(0,5));
       return ;
     }
     else
@@ -26,13 +30,11 @@ app.get("/", function (request, response) {
         response.json({});
       }
   });
-  
-  
 });
 
 
 app.get("/",function(request,response){
-  response.sendFile(__dirname+);
+  response.sendFile(__dirname+"/views/index.html");
 });
 
 
