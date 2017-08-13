@@ -8,11 +8,17 @@ var databaseUrl = 'mongodb://'+process.env.USER+':'+process.env.PASS+'@'+process
 
 app.use(express.static('public'));
 
+function insertInDb(term,db){
+  db.collection("history").insertOne({
+    "term" : term,
+    "when" :new ISODate()
+  })
+}
 
 mongodb.MongoClient.connect(databaseUrl,function (err, db){
   if(err){throw err;}
   app.get("/search/:term", function (request, response) {
-  /*store search term in history*/
+  insertInDb(request.params.term,db);
   var offset = request.query.offset;
   if((!offset) || (offset > 50) || (offset < 1))
     {
@@ -62,12 +68,12 @@ mongodb.MongoClient.connect(databaseUrl,function (err, db){
 });
 
   app.get("/history",function (request,response){
-    db.collection("history").find({}).toArray(function(err,data){
+    db.collection("history").find({}).sort({_id: 1}).limit(10).toArray(function(err,data){
       if(err){throw err;}
       var arra = [];
       data.map(function(element){
-        arra.push({term : data.term,
-                  when : data.when})
+        arra.push({term : element.term,
+                  when : element.when})
       });
       response.json(arra);
       
