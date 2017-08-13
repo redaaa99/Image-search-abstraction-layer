@@ -1,14 +1,17 @@
 
 var express = require('express');
 var app = express();
-var mongo = require("mongo");
+var mongodb = require('mongodb');
 var requestt = require('request');
+var databaseUrl = 'mongodb://'+process.env.USER+':'+process.env.PASS+'@'+process.env.HOST+':'+process.env.DB_PORT+'/'+process.env.DB;
+
 
 app.use(express.static('public'));
 
 
-
-app.get("/search/:term", function (request, response) {
+mongodb.MongoClient.connect(databaseUrl,function (err, db){
+  
+  app.get("/search/:term", function (request, response) {
   /*store search term in history*/
   var offset = request.query.offset;
   if((!offset) || (offset > 50) || (offset < 1))
@@ -58,13 +61,11 @@ app.get("/search/:term", function (request, response) {
   });
 });
 
-
-app.get("/",function(request,response){
-  response.sendFile(__dirname+"/views/index.html");
-});
-app.listen(process.env.PORT);
-
-
-mongodb.MongoClient.connect(databaseUrl,function (err, db){
-
+  app.get("/history",function (request,response){
+    
+  });
+  app.get("/",function(request,response){
+    response.sendFile(__dirname+"/views/index.html");
+  });
+  app.listen(process.env.PORT);
 });
