@@ -14,7 +14,7 @@ app.use(express.static('public'));
 app.get("/", function (request, response) {
   
   var options = {
-    url: 'https://api.imgur.com/3/image/search/?q=test',
+    url: 'https://api.imgur.com/3/gallery/Hpg63',
     headers: {
        Authorization: 'Client-ID '+process.env.CLIENT_ID,
     }
@@ -22,8 +22,10 @@ app.get("/", function (request, response) {
 
   requestt(options,function(error, res, body) {
     if (!error) {
-      return response.json(body);
+      
+      return ;
     }
+    response.json(body);
   });
   
   response.sendFile(__dirname + '/views/index.html');
