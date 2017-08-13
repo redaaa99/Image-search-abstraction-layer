@@ -8,12 +8,14 @@ app.use(express.static('public'));
 
 app.get("/search/:term", function (request, response) {
   /*store search term in history*/
-  if((!request.query.offset) || (request.query.offset > 50) || (request.query.offset < 1))
+  var offset = request.query.offset;
+  if((!offset) || (offset > 50) || (offset < 1))
     {
-      
+      offset = 10;
     }
+  console.log(offset);
   var options = {
-    url: 'https://api.imgur.com/3/gallery/search?q='+request.params.term+'&offset='+request.query.offset,
+    url: 'https://api.imgur.com/3/gallery/search?q='+request.params.term+'&page='+offset,
     headers: {
        Authorization: 'Client-ID '+process.env.CLIENT_ID,
     }
@@ -22,7 +24,7 @@ app.get("/search/:term", function (request, response) {
   requestt(options,function(error, res, body) {
     if(error) {console.log(error);}
     if (!error) {
-      response.json(JSON.parse(body).data.slice(0,5));
+      response.json(JSON.parse(body).data/*.slice(offset,5)*/);
       return ;
     }
     else
