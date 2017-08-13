@@ -11,7 +11,7 @@ app.use(express.static('public'));
 function insertInDb(term,db){
   db.collection("history").insertOne({
     "term" : term,
-    "when" :new ISODate()
+    "when" : new Date()
   })
 }
 
@@ -68,7 +68,7 @@ mongodb.MongoClient.connect(databaseUrl,function (err, db){
 });
 
   app.get("/history",function (request,response){
-    db.collection("history").find({}).sort({_id: 1}).limit(10).toArray(function(err,data){
+    db.collection("history").find({}).sort({when: -1}).limit(10).toArray(function(err,data){
       if(err){throw err;}
       var arra = [];
       data.map(function(element){
