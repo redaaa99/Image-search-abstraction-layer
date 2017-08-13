@@ -62,10 +62,16 @@ mongodb.MongoClient.connect(databaseUrl,function (err, db){
 });
 
   app.get("/history",function (request,response){
-    db.collection("history").find({}).sort({_id:1}).limit(10,function(err,result){
-      console.log()
+    db.collection("history").find({}).toArray(function(err,data){
+      if(err){throw err;}
+      var arra = [];
+      data.map(function(element){
+        arra.push({term : data.term,
+                  when : data.when})
+      });
+      response.json(arra);
+      
     });
-    response.json({});
   });
   app.get("/",function(request,response){
     response.sendFile(__dirname+"/views/index.html");
