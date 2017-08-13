@@ -25,10 +25,28 @@ app.get("/search/:term", function (request, response) {
     if(error) {console.log(error);}
     if (!error) {
       var array = [];
-      JSON.parse(body).map(function(element){
+      JSON.parse(body).data.slice(0,40).map(function(element){
+        if(element.type)
+          {
+            array.push({
+              id : element.id,
+              title :element.title,
+              description : element.description,
+              link : element.link
+            })
+          }
+        else
+          {
+            array.push({
+              id : element.id,
+              title :element.title,
+              description : element.description,
+              link : element.images.link
+            })
+          }
           
       });
-      response.json(JSON.parse(body).data.slice(0,40));
+      response.json(array);
       return ;
     }
     else
