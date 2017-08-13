@@ -24,7 +24,11 @@ app.get("/search/:term", function (request, response) {
   requestt(options,function(error, res, body) {
     if(error) {console.log(error);}
     if (!error) {
-      response.json(JSON.parse(body).data/*.slice(offset,5)*/);
+      var array = [];
+      JSON.parse(body).map(function(element){
+          
+      });
+      response.json(JSON.parse(body).data.slice(0,40));
       return ;
     }
     else
