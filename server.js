@@ -1,10 +1,12 @@
 
 var express = require('express');
 var app = express();
-var https = require("https");
+var mongo = require("mongo");
 var requestt = require('request');
 
 app.use(express.static('public'));
+
+
 
 app.get("/search/:term", function (request, response) {
   /*store search term in history*/
@@ -41,7 +43,7 @@ app.get("/search/:term", function (request, response) {
               id : element.id,
               title :element.title,
               description : element.description,
-              link : element.images.link
+              link : element.images[0].link
             })
           }
           
@@ -60,7 +62,9 @@ app.get("/search/:term", function (request, response) {
 app.get("/",function(request,response){
   response.sendFile(__dirname+"/views/index.html");
 });
+app.listen(process.env.PORT);
 
 
+mongodb.MongoClient.connect(databaseUrl,function (err, db){
 
-var listener = app.listen(process.env.PORT);
+});
